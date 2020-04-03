@@ -9,7 +9,7 @@ struct stack {
 
 struct stack *stack_new(void){
     //printf("%o", sizeof(struct stack));
-    return (struct stack *) malloc(sizeof(struct stack));
+    return (struct stack *) calloc(100, sizeof(struct stack));
 }
 
 
