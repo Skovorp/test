@@ -7,30 +7,77 @@ struct stack {
 };
 
 struct stack *stack_create(void);
+int stack_delete(struct stack *stk);
 
 int stack_push(struct stack *stk, int new_element);
+int stack_pop (struct stack *stk);
+int stack_top (struct stack *stk, int *top_element);
 
 struct stack *stack_create(void){
     int *A;
-    A = (int *) calloc(3, sizeof(int));
+    A = (int *) calloc(1, sizeof(int));
     struct stack* ptr;
     ptr->data = A;
+    ptr->size = 0;
     return ptr;
 }
 
+int stack_delete(struct stack *stk){
+    if (!stk->data){
+        return -1;
+    }
+    free(stk->data);
+    free(stk);
+    return 0;
+}
+
 int stack_push(struct stack *stk, int new_element){
-    stk->data ++;
-    *stk->data = new_element;
+    stk->data = realloc(stk->data, (stk->size+1) * sizeof(int));
+    stk->size ++;
+    if (!stk->data){
+        return -1;
+    }
+    stk->data[stk->size - 1] = new_element;
+    return 0;
+}
+
+int stack_pop (struct stack *stk){
+    stk->data = realloc(stk->data, (stk->size-1) * sizeof(int));
+    stk->size--;
+    if (!stk->data){
+        return -1;
+    }
+    return 0;
+}
+
+int stack_top (struct stack *stk, int *top_element){
+    if (!top_element){
+        return -1;
+    }
+    *top_element = stk->data[stk->size - 1];
     return 0;
 }
 
 int main(){
     struct stack *s;
+    int* d ;
+    int real;
+    d = &real;
     s = stack_create();
+
     stack_push(s, 2);
-    printf("%i", *s->data);
+    stack_top(s, d);
+    printf("N1 %i \n", *d);
+
     stack_push(s, 3);
-    printf("%i", *s->data);
+    stack_top(s, d);
+    printf("N2 %i \n", *d);
+
+    stack_pop(s);
+    stack_top(s, d);
+    printf("N3 %i \n", *d);
+
+    stack_delete(s);
     return 0;
 }
 
